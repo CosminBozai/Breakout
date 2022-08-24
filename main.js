@@ -6,9 +6,6 @@ const tableController = (() => {
       brick.classList.add("brick");
       gameTable.appendChild(brick);
     }
-    /* 
-    take how many bricks to make
-    make them through a loop  */
   }
 
   function splitBricks() {
@@ -24,8 +21,13 @@ const tableController = (() => {
         leftPos = 0;
       }
     }
-    /* loop through the bricks and add positioning to them
-    if more than 8 just go to the next row*/
   }
   return { createBricks, splitBricks };
 })();
+
+const paddle = document.getElementById("paddle");
+function movePaddle(e) {
+  // -50 is used to mouse position coresponds with the center of the paddle
+  paddle.style.left = e.pageX - 50 + "px";
+}
+document.addEventListener("mousemove", movePaddle);
