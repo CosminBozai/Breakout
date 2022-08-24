@@ -6,6 +6,15 @@
   box-sizing: border-box;
 }
 
+#paddle {
+  position: absolute;
+  bottom: 20px;
+  left: calc(50% - 50px);
+  width: 100px;
+  height: 20px;
+  background-color: blue;
+}
+
 .brick {
   position: absolute;
   width: 100px;
