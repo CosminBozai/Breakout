@@ -25,9 +25,11 @@ const tableController = (() => {
   return { createBricks, splitBricks };
 })();
 
-const paddle = document.getElementById("paddle");
-function movePaddle(e) {
-  // -50 is used to mouse position coresponds with the center of the paddle
-  paddle.style.left = e.pageX - 50 + "px";
-}
-document.addEventListener("mousemove", movePaddle);
+const paddleController = (() => {
+  const paddle = document.getElementById("paddle");
+  function movePaddle(e) {
+    // -50 is used to mouse position coresponds with the center of the paddle
+    paddle.style.left = e.pageX - 50 + "px";
+  }
+  document.addEventListener("mousemove", movePaddle);
+})();
