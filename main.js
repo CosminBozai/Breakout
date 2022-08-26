@@ -1,22 +1,29 @@
-const tableController = (() => {
-  const gameBoard = document.getElementById("game-board");
+const boardController = (() => {
+  const gameBoard = {
+    board: document.getElementById("game-board"),
+    boardWidth: Number(
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--board-width")
+        .replace("px", "")
+    ),
+    boardHeight: Number(
+      getComputedStyle(document.documentElement)
+        .getPropertyValue("--board-height")
+        .replace("px", "")
+    ),
+  };
 
   function createBricks(bricksNum) {
     for (let i = 0; i < bricksNum; i++) {
       let brick = document.createElement("div");
       brick.classList.add("brick");
-      gameBoard.appendChild(brick);
+      gameBoard.board.appendChild(brick);
     }
   }
 
   function splitBricks() {
     let bricks = document.querySelectorAll(".brick");
-    let brickWidth =
-      Number(
-        getComputedStyle(document.documentElement)
-          .getPropertyValue("--board-width")
-          .replace("px", "")
-      ) / 10;
+    let brickWidth = gameBoard.boardWidth / 10;
 
     //   leftPos topPos are used so bricks don't spawn one on top of the other
     let leftPos = 0;
@@ -32,25 +39,29 @@ const tableController = (() => {
       }
     }
   }
-  return { createBricks, splitBricks };
+  return { createBricks, splitBricks, gameBoard };
 })();
 
 const paddleController = () => {
   const paddle = document.getElementById("paddle");
   function movePaddle(e) {
-    // -50 is used to mouse position coresponds with the center of the paddle
-    paddle.style.left = e.pageX - 50 + "px";
+    if (
+      paddle.offsetLeft >= 0 &&
+      paddle.offsetLeft <= boardController.gameBoard.boardWidth - 100
+    ) {
+      paddle.style.left = e.pageX - 50 + "px";
+    } else if (paddle.offsetLeft < 0) {
+      paddle.style.left = 0;
+    } else if (paddle.offsetLeft > boardController.gameBoard.boardWidth - 100) {
+      paddle.style.left = boardController.gameBoard.boardWidth - 100 + "px";
+    }
   }
-  document.addEventListener("mousemove", movePaddle);
+
+  boardController.gameBoard.board.addEventListener("mousemove", movePaddle);
 };
 
 function startGame(bricksNum) {
   paddleController();
-  tableController.createBricks(bricksNum);
-  tableController.splitBricks();
+  boardController.createBricks(bricksNum);
+  boardController.splitBricks();
 }
-
-/* TO-DO 
-1. PUT A GAP ON THE NUMBER OF BRICKS YOU CAN CREATE
-2. MAKE THE PADDLE NOT FOLLOW THE MOUSE OUTSIDE OF THE BOARD'S BORDER
-*/
