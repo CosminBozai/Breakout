@@ -1,7 +1,3 @@
-* {
-  box-sizing: border-box;
-}
-
 :root {
   --board-width: 800px;
   --board-height: 400px;
@@ -9,10 +5,10 @@
 
 #game-board {
   position: relative;
-  /* +2px makes the small space after the last brick */
-  width: calc(var(--board-width) + 2px);
+  /* +4px makes the small space after the last brick */
+  width: var(--board-width);
   height: var(--board-height);
-  border: 2px solid black;
+  border: 3px solid black;
 }
 
 #paddle {
@@ -26,7 +22,7 @@
 
 .brick {
   position: absolute;
-  width: calc(var(--board-width) / 10 - 2px);
+  width: calc(var(--board-width) / 10 - 1px);
   height: 20px;
   background-color: blue;
 }
