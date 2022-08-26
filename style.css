@@ -4,12 +4,11 @@
 }
 
 body {
-  cursor: none;
+  /* cursor: none; */
 }
 
 #game-board {
   position: relative;
-  /* +4px makes the small space after the last brick */
   width: var(--board-width);
   height: var(--board-height);
   border: 3px solid black;
@@ -29,4 +28,14 @@ body {
   width: calc(var(--board-width) / 10 - 1px);
   height: 20px;
   background-color: blue;
+}
+
+#ball {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: calc(50% - 8px);
+  bottom: 40px;
+  border-radius: 50%;
+  background-color: red;
 }
