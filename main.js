@@ -1,6 +1,7 @@
 const boardController = (() => {
-  const gameBoard = {
+  const boardObj = {
     board: document.getElementById("game-board"),
+    // Get the values from the :root variable in style.css
     boardWidth: Number(
       getComputedStyle(document.documentElement)
         .getPropertyValue("--board-width")
@@ -17,13 +18,13 @@ const boardController = (() => {
     for (let i = 0; i < bricksNum; i++) {
       let brick = document.createElement("div");
       brick.classList.add("brick");
-      gameBoard.board.appendChild(brick);
+      boardObj.board.appendChild(brick);
     }
   }
 
   function splitBricks() {
     let bricks = document.querySelectorAll(".brick");
-    let brickWidth = gameBoard.boardWidth / 10;
+    let brickWidth = boardObj.boardWidth / 10;
 
     //   leftPos topPos are used so bricks don't spawn one on top of the other
     let leftPos = 0;
@@ -39,29 +40,89 @@ const boardController = (() => {
       }
     }
   }
-  return { createBricks, splitBricks, gameBoard };
+  return { createBricks, splitBricks, boardObj };
 })();
 
 const paddleController = () => {
   const paddle = document.getElementById("paddle");
+  // 100 is the width of the paddle
+  // substract 100 so it calculates by the end of the paddle
   function movePaddle(e) {
     if (
       paddle.offsetLeft >= 0 &&
-      paddle.offsetLeft <= boardController.gameBoard.boardWidth - 100
+      paddle.offsetLeft <= boardController.boardObj.boardWidth - 100
     ) {
       paddle.style.left = e.pageX - 50 + "px";
     } else if (paddle.offsetLeft < 0) {
       paddle.style.left = 0;
-    } else if (paddle.offsetLeft > boardController.gameBoard.boardWidth - 100) {
-      paddle.style.left = boardController.gameBoard.boardWidth - 100 + "px";
+    } else if (paddle.offsetLeft > boardController.boardObj.boardWidth - 100) {
+      paddle.style.left = boardController.boardObj.boardWidth - 100 + "px";
     }
   }
 
-  boardController.gameBoard.board.addEventListener("mousemove", movePaddle);
+  boardController.boardObj.board.addEventListener("mousemove", movePaddle);
+};
+
+const ballController = () => {
+  let ballObj = {
+    ball: document.getElementById("ball"),
+    xPosition: Number(
+      getComputedStyle(ball).getPropertyValue("left").replace("px", "")
+    ),
+    yPosition: Number(
+      getComputedStyle(ball).getPropertyValue("bottom").replace("px", "")
+    ),
+    diameter: Number(
+      getComputedStyle(ball).getPropertyValue("width").replace("px", "")
+    ),
+  };
+
+  let yDirection = 6;
+  let xDirection = -6;
+
+  function moveBall() {
+    ballObj.yPosition += yDirection;
+    ballObj.xPosition += xDirection;
+
+    ball.style.bottom = ballObj.yPosition + "px";
+    ball.style.left = ballObj.xPosition + "px";
+    checkCollision();
+    // console.log(ballObj.ball.offsetTop);
+    console.log(xDirection, yDirection);
+  }
+
+  function checkCollision() {
+    if (
+      ballObj.ball.offsetLeft <= 0 ||
+      ballObj.ball.offsetLeft >=
+        boardController.boardObj.boardWidth - ballObj.diameter
+    ) {
+      changeDirection("x");
+    } else if (
+      ballObj.ball.offsetTop <= 0 ||
+      ballObj.ball.offsetTop >=
+        boardController.boardObj.boardHeight - ballObj.diameter
+    ) {
+      changeDirection("y");
+    }
+  }
+  function changeDirection(xy) {
+    switch (xy) {
+      case "x":
+        xDirection *= -1;
+        break;
+      case "y":
+        yDirection *= -1;
+        break;
+    }
+  }
+
+  setInterval(moveBall, 50);
 };
 
 function startGame(bricksNum) {
   paddleController();
   boardController.createBricks(bricksNum);
   boardController.splitBricks();
+  ballController();
 }
