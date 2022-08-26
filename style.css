@@ -3,6 +3,10 @@
   --board-height: 400px;
 }
 
+body {
+  cursor: none;
+}
+
 #game-board {
   position: relative;
   /* +4px makes the small space after the last brick */
