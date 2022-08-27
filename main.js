@@ -89,9 +89,6 @@ const ballController = () => {
     ball.style.bottom = ballObj.yPosition + "px";
     ball.style.left = ballObj.xPosition + "px";
     checkCollision();
-    // console.log(ballObj.ball.offsetTop);
-    console.log("ball: " + ballObj.ball.offsetTop);
-    console.log("paddle: " + paddle.offsetTop);
   }
 
   function checkCollision() {
@@ -113,11 +110,24 @@ const ballController = () => {
     // Collision with the paddle
     if (
       ballObj.ball.offsetLeft > paddle.offsetLeft &&
-      ballObj.ball.offsetLeft < paddle.offsetLeft + 100 &&
+      ballObj.ball.offsetLeft < paddle.offsetLeft + 33 &&
       ballObj.ball.offsetTop + ballObj.diameter === paddle.offsetTop
     ) {
-      changeDirection("y");
-      console.log("fdskfhds");
+      changeDirection("left");
+    } else if (
+      ballObj.ball.offsetLeft > paddle.offsetLeft &&
+      ballObj.ball.offsetLeft >= paddle.offsetLeft + 33 &&
+      ballObj.ball.offsetLeft < paddle.offsetLeft + 66 &&
+      ballObj.ball.offsetTop + ballObj.diameter === paddle.offsetTop
+    ) {
+      changeDirection("up");
+    } else if (
+      ballObj.ball.offsetLeft > paddle.offsetLeft &&
+      ballObj.ball.offsetLeft >= paddle.offsetLeft + 66 &&
+      ballObj.ball.offsetTop + ballObj.diameter === paddle.offsetTop &&
+      ballObj.ball.offsetLeft < paddle.offsetLeft + 100
+    ) {
+      changeDirection("right");
     }
   }
 
@@ -129,7 +139,20 @@ const ballController = () => {
       case "y":
         yDirection *= -1;
         break;
+      case "up":
+        xDirection = 0;
+        yDirection *= -1;
+        break;
+      case "left":
+        xDirection = -3;
+        yDirection *= -1;
+        break;
+      case "right":
+        xDirection = 3;
+        yDirection *= -1;
+        break;
     }
+    console.log(xDirection);
   }
 
   setInterval(moveBall, 50);
