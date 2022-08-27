@@ -19,6 +19,7 @@ const boardController = (() => {
       let brick = document.createElement("div");
       brick.classList.add("brick");
       boardObj.board.appendChild(brick);
+      brickArray.push(brick);
       splitBricks();
     }
   }
@@ -41,7 +42,12 @@ const boardController = (() => {
       }
     }
   }
-  return { createBricks, boardObj };
+
+  function deleteBrick(index) {
+    boardObj.board.removeChild(index);
+  }
+
+  return { createBricks, boardObj, brickArray, deleteBrick };
 })();
 
 const paddleController = () => {
@@ -80,7 +86,7 @@ const ballController = () => {
   };
 
   let yDirection = 8;
-  let xDirection = 3;
+  let xDirection = 0;
 
   function moveBall() {
     ballObj.yPosition += yDirection;
@@ -129,6 +135,19 @@ const ballController = () => {
     ) {
       changeDirection("right");
     }
+
+    //Collision with the bricks
+    boardController.brickArray.forEach((brick) => {
+      if (
+        ballObj.ball.offsetLeft > brick.offsetLeft &&
+        ballObj.ball.offsetLeft <
+          brick.offsetLeft + boardController.boardObj.boardWidth / 10 &&
+        ballObj.ball.offsetTop <= brick.offsetTop + ballObj.diameter
+      ) {
+        changeDirection("y");
+        boardController.deleteBrick(brick);
+      }
+    });
   }
 
   function changeDirection(xy) {
@@ -152,7 +171,6 @@ const ballController = () => {
         yDirection *= -1;
         break;
     }
-    console.log(xDirection);
   }
 
   setInterval(moveBall, 50);
