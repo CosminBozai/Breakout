@@ -19,6 +19,7 @@ const boardController = (() => {
       let brick = document.createElement("div");
       brick.classList.add("brick");
       boardObj.board.appendChild(brick);
+      splitBricks();
     }
   }
 
@@ -40,7 +41,7 @@ const boardController = (() => {
       }
     }
   }
-  return { createBricks, splitBricks, boardObj };
+  return { createBricks, boardObj };
 })();
 
 const paddleController = () => {
@@ -61,6 +62,7 @@ const paddleController = () => {
   }
 
   boardController.boardObj.board.addEventListener("mousemove", movePaddle);
+  return { paddle };
 };
 
 const ballController = () => {
@@ -77,8 +79,8 @@ const ballController = () => {
     ),
   };
 
-  let yDirection = 6;
-  let xDirection = -6;
+  let yDirection = 8;
+  let xDirection = 3;
 
   function moveBall() {
     ballObj.yPosition += yDirection;
@@ -88,10 +90,12 @@ const ballController = () => {
     ball.style.left = ballObj.xPosition + "px";
     checkCollision();
     // console.log(ballObj.ball.offsetTop);
-    console.log(xDirection, yDirection);
+    console.log("ball: " + ballObj.ball.offsetTop);
+    console.log("paddle: " + paddle.offsetTop);
   }
 
   function checkCollision() {
+    // Collision with the borders
     if (
       ballObj.ball.offsetLeft <= 0 ||
       ballObj.ball.offsetLeft >=
@@ -105,7 +109,18 @@ const ballController = () => {
     ) {
       changeDirection("y");
     }
+
+    // Collision with the paddle
+    if (
+      ballObj.ball.offsetLeft > paddle.offsetLeft &&
+      ballObj.ball.offsetLeft < paddle.offsetLeft + 100 &&
+      ballObj.ball.offsetTop + ballObj.diameter === paddle.offsetTop
+    ) {
+      changeDirection("y");
+      console.log("fdskfhds");
+    }
   }
+
   function changeDirection(xy) {
     switch (xy) {
       case "x":
@@ -121,8 +136,7 @@ const ballController = () => {
 };
 
 function startGame(bricksNum) {
-  paddleController();
   boardController.createBricks(bricksNum);
-  boardController.splitBricks();
-  ballController();
+  boardController.boardObj.board.addEventListener("click", ballController);
+  boardController.boardObj.board.addEventListener("click", paddleController);
 }
