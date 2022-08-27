@@ -24,6 +24,8 @@ const boardController = (() => {
     }
   }
 
+  let brickArray = [];
+
   function splitBricks() {
     let bricks = document.querySelectorAll(".brick");
     let brickWidth = boardObj.boardWidth / 10;
